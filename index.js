@@ -1,6 +1,14 @@
 var ibmdb = require('ibm_db');
 
 module.exports = function(source, resourceType, cb) {
+  if(!source || !source.credentials) {
+    cb(new Error("need credentials"));
+    return;
+  }
+  if(!source.query) {
+    cb(new Error("query missing"));
+    return;
+  }
   var cred = source.credentials;
   var connString = "DRIVER={DB2};DATABASE=" + cred.db + ";UID=" + cred.username + ";PWD=" + cred.password + ";HOSTNAME=" + cred.hostname + ";port=" + cred.port;
   ibmdb.open(connString, function(err, conn) {
